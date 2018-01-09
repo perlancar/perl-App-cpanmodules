@@ -1,0 +1,64 @@
+#!perl
+
+# DATE
+# VERSION
+
+use 5.010001;
+use strict;
+use warnings;
+
+use Perinci::CmdLine::Any;
+
+my $prefix = '/App/cpanmodules/';
+
+Perinci::CmdLine::Any->new(
+    url => $prefix,
+    subcommands => {
+        'ls'         => {url=>"${prefix}list_acmemods"},
+        'view'       => {url=>"${prefix}view_acmemod"},
+        'get'        => {url=>"${prefix}get_acmemod"},
+        'ls-entries'     => {url=>"${prefix}list_entries"},
+    },
+)->run;
+
+# ABSTRACT: The Acme::CPANModules CLI
+# PODNAME:
+
+=head1 SYNOPSIS
+
+Install some C<Acme::CPANModules::> modules and then ...
+
+List all installed Acme::CPANModules modules:
+
+ % cpanmodules ls
+ % cpanmodules ls -l
+
+Find Acme::CPANModules modules that mention a module:
+
+ % cpanmodules ls --mentions Foo::Bar
+
+View as rendered POD:
+
+ % cpanmodules view PERLANCAR::Favorites
+
+Get the list (raw):
+
+ % cpanmodules get PERLANCAR::Favorites
+
+List entries of a list:
+
+ % cpanmodules ls-entries PERLANCAR::Favorites::App
+ App::lcpan
+ App::pause
+ App::SetScreensaverTimeout
+
+Install all entries of a list:
+
+ % cpanmodules ls-entries PERLANCAR::Favorites::App | cpanm -n
+
+
+=head1 SEE ALSO
+
+L<Acme::CPANModules>
+
+C<Acme::CPANModules::*> modules
