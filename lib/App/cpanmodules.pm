@@ -1,4 +1,4 @@
-package App::acmemodules;
+package App::cpanmodules;
 
 # DATE
 # VERSION
@@ -152,7 +152,7 @@ sub view_acmemod {
 
     my %args = @_;
 
-    my $res = get_list(%args);
+    my $res = get_acmemod(%args);
     return $res unless $res->[0] == 200;
 
     my %podargs;
@@ -171,12 +171,13 @@ $SPEC{list_entries} = {
     summary => 'List entries from an Acme::CPANModules module',
     args => {
         %arg0_module,
+        %arg_detail,
     },
 };
 sub list_entries {
     my %args = @_;
 
-    my $res = get_list(%args);
+    my $res = get_acmemod(%args);
     return $res unless $res->[0] == 200;
     my $list = $res->[2];
 
@@ -202,7 +203,7 @@ sub list_entries {
         for my $n (@{ $e->{"alternate_modules"} // [] }) {
             if ($args{alternate}) {
                 push @rows, {
-                    $module => $n,
+                    module => $n,
                     summary=>$e->{summary},
                     alternate=>1,
                 };
