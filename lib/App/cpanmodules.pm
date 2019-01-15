@@ -172,6 +172,12 @@ $SPEC{list_entries} = {
     args => {
         %arg0_module,
         %arg_detail,
+        with_attrs => {
+            'x.name.is_plural' => 1,
+            'x.name.singular' => 'with_attr',
+            summary => 'Include additional attributes from each entry',
+            schema => ['array*', of=>'str*'],
+        },
     },
 };
 sub list_entries {
@@ -181,37 +187,25 @@ sub list_entries {
     return $res unless $res->[0] == 200;
     my $list = $res->[2];
 
+    my $attrs = $args{with_attrs} // [];
+
     my @rows;
     for my $e (@{ $list->{entries} }) {
-        my $n = $e->{module};
-        unless ($args{related} || $args{alternate}) {
-            push @rows, {
-                module => $n,
-                summary=>$e->{summary},
-                rating=>$e->{rating},
-            };
+        my $mod = $e->{module};
+        my $row = {
+            module => $mod,
+            summary => $e->{summary},
+            rating => $e->{rating},
+        };
+        for (@$attrs) {
+            $row->{$_} = $e->{$_};
         }
-        for my $n (@{ $e->{"related_modules"} // [] }) {
-            if ($args{related}) {
-                push @rows, {
-                    module => $n,
-                    summary=>$e->{summary},
-                    related=>1,
-                };
-            }
-        }
-        for my $n (@{ $e->{"alternate_modules"} // [] }) {
-            if ($args{alternate}) {
-                push @rows, {
-                    module => $n,
-                    summary=>$e->{summary},
-                    alternate=>1,
-                };
-            }
-        }
+        push @rows, $row;
     } # for each entry
 
-    unless ($args{detail}) {
+    my $detail = $args{detail} || @$attrs;
+
+    unless ($detail) {
         @rows = map {$_->{module}} @rows;
     }
 
