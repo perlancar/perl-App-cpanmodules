@@ -79,11 +79,11 @@ $SPEC{list_acmemods} = {
     },
 };
 sub list_acmemods {
-    require PERLANCAR::Module::List;
+    require Module::List::Tiny;
 
     my %args = @_;
 
-    my $res = PERLANCAR::Module::List::list_modules(
+    my $res = Module::List::Tiny::list_modules(
         'Acme::CPANModules::', {list_modules=>1, recurse=>1});
 
     my @res;
@@ -154,13 +154,17 @@ sub view_acmemod {
 
     my $res = get_acmemod(%args);
     return $res unless $res->[0] == 200;
+    my $list = $res->[2];
 
     my %podargs;
-    $podargs{list} = $res->[2];
+    $podargs{list} = $list;
     my $podres = Pod::From::Acme::CPANModules::gen_pod_from_acme_cpanmodules(
         %podargs);
 
-    my $pod = $podres->{pod}{DESCRIPTION} . $podres->{pod}{'INCLUDED MODULES'};
+    my $pod = $podres->{pod}{DESCRIPTION};
+    if ($list->{'x.app.cpanmodules.show_entries'} // 1) {
+        $pod .= $podres->{pod}{'INCLUDED MODULES'};
+    }
     [200, "OK", $pod, {
         "cmdline.page_result"=>1,
         "cmdline.pager"=>"pod2man | man -l -"}];
@@ -219,3 +223,11 @@ sub list_entries {
 =head1 SYNOPSIS
 
 Use the included script L<cpanmodules>.
+
+
+=head1 OBSERVED CPANMODULES PROPERTIES/ATTRIBUTES
+
+=head2 x.app.cpanmodules.show_entries
+
+Boolean. Default is true. If set to false, will not show entries in the
+generated POD's Description.
