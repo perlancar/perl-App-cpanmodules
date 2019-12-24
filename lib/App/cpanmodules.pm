@@ -1,6 +1,8 @@
 package App::cpanmodules;
 
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
 use 5.010001;
@@ -109,9 +111,19 @@ sub list_acmemods {
             }
         }
         if ($args{detail}) {
+            my $has_benchmark = 0;
+          L1:
+            for my $entry (@{ $list->{entries} }) {
+                if (grep {/^bench_/} keys %$entry) {
+                    $has_benchmark = 1;
+                    last L1;
+                }
+            }
             push @res, {
                 acmemod => $e,
                 summary => $list->{summary},
+                num_entries => scalar(@{ $list->{entries} }),
+                has_benchmark => $has_benchmark,
             };
         } else {
             push @res, $e;
