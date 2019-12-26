@@ -243,3 +243,13 @@ Use the included script L<cpanmodules>.
 
 Boolean. Default is true. If set to false, will not show entries in the
 generated POD's Description.
+
+
+=head1 SEE ALSO
+
+L<Acme::CPANModules>
+
+L<App::CPANModulesUtils> provides some other CLI's related to Acme::CPANModules.
+
+L<lcpan> also has some subcommands (supplied by
+L<App::lcpan::CmdBundle::cpanmodules>) to query Acme::CPANModules modules.
