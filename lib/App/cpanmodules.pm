@@ -253,3 +253,5 @@ L<App::CPANModulesUtils> provides some other CLI's related to Acme::CPANModules.
 
 L<lcpan> also has some subcommands (supplied by
 L<App::lcpan::CmdBundle::cpanmodules>) to query Acme::CPANModules modules.
+
+L<App::CPANAuthorsUtils> for L<Acme::CPANAuthors>
