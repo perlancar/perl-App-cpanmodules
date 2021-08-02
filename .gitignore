@@ -2,3 +2,4 @@ App-cpanmodules-*
 .build
 *~
 nytprof*
+.DS_Store
